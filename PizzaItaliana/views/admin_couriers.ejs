@@ -1,0 +1,85 @@
+<%- include('./partials/admin_welcome.ejs') %>
+
+<div class="w-full md:max-w-6xl mx-auto mt-8">
+    <a href="/couriers/add" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm
+px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+        Добавить курьера
+    </a>
+</div>
+
+<% if (couriers) { %>
+    <div class="relative overflow-x-auto mt-8">
+        <table class="w-full md:max-w-6xl mx-auto text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    ID
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    ФИО
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Email
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Телефон
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Дата рождения
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Зарплата
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Активен
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Готов принять заказ
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <% couriers.forEach((courier) => { %>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <%= courier.ID %>
+                    </th>
+                    <td class="px-6 py-4">
+                        <a href="/couriers/<%= courier.ID %>">
+                        <%= courier.FULL_NAME %>
+                        </a>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= courier.EMAIL %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= courier.PHONE_NUMBER %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= courier.DATE_OF_BIRTH %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= courier.SALARY %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <% if (courier.ACTIVE) { %>
+                            Да
+                        <% } else { %>
+                            Нет
+                        <% } %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <% if (courier.READY_TO_GO) { %>
+                            Да
+                        <% } else { %>
+                            Нет
+                        <% } %>
+                    </td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <%- include('./partials/footer.ejs')%>
+<% } %>

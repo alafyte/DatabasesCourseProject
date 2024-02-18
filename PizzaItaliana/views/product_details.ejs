@@ -1,0 +1,119 @@
+<div id="error"
+     class="hidden flex w-full md:max-w-md mx-auto  items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+     role="alert">
+    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+         fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+    </svg>
+    <span class="sr-only">Info</span>
+    <div id="error_text">
+
+    </div>
+</div>
+
+<div class="flex flex-col md:items-start items-center mx-auto mt-10 md:flex-row md:max-w-3xl">
+    <img class="object-cover h-96 md:h-auto md:w-64 md:rounded-none md:rounded-l-lg"
+         src="<%= product.ITEM_IMAGE %>" alt="<%= product.ITEM_NAME %>">
+    <div class="flex flex-col p-4 leading-normal">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <%= product.ITEM_NAME %>
+        </h5>
+        <p class="mb-3 text-lg font-normal text-gray-700 dark:text-white">
+            <%= product.DESCRIPTION %>
+        </p>
+
+        <div class="sm:hidden">
+            <label for="tabs" class="sr-only">Select your country</label>
+            <select id="tabs" onchange="changeSize(value)"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                <% sizes.forEach((size) => { %>
+                    <option value="<%= size.ID %>"><%= size.ITEM_SIZE %> см</option>
+                <% }); %>
+            </select>
+        </div>
+        <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+            <% sizes.forEach((size) => { %>
+                <li onclick="changeSize(<%= size.ID %>)" id="<%= size.ID %>" class="tab w-full">
+                    <div
+                            class="cursor-pointer inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white"
+                            aria-current="page">
+                        <%= size.ITEM_SIZE %> см
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+
+        <p id="price" class="mb-3 mt-4 text-xl font-normal dark:text-white">
+
+        </p>
+        <div class="w-full md:max-w-6xl mx-auto mt-8">
+            <div onclick="addToCart()" class="cursor-pointer text-white w-fit bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm
+px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                Добавить товар в корзину
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script lang="js" type="text/javascript">
+    let tabs = document.getElementsByClassName('tab');
+    let price = document.getElementById('price');
+    let prices = JSON.parse('<%- prices %>');
+    let current_size = null;
+
+    window.onload = (event) => {
+        event.preventDefault();
+        for (let tab of tabs) {
+            if (tab.id === '<%= current_size_option %>') {
+                tab.classList.add('text-gray-900')
+                tab.classList.add('bg-gray-100')
+                current_size = tab.id;
+                price.innerHTML = 'Цена: <%= product.SMALL_SIZE_PRICE%> р.'
+            }
+        }
+    }
+
+    const changeSize = (id) => {
+        current_size = id;
+        for (let tab of tabs) {
+            if (tab.id == id) {
+                console.log(tab.id)
+                tab.classList.add('text-gray-900')
+                tab.classList.add('bg-gray-100')
+            } else {
+                tab.classList.remove('text-gray-900')
+                tab.classList.remove('bg-gray-100')
+            }
+        }
+
+        let current_markup = prices.filter(price => price.ID == id)[0].MARKUP;
+        let small_size_price = +'<%= product.SMALL_SIZE_PRICE%>';
+        let result = (current_markup * small_size_price).toFixed(2);
+        price.innerHTML = `Цена: ${result} р.`
+    }
+
+    const addToCart = (event) => {
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                item_id: +'<%=product.ID%>',
+                item_size: current_size
+            })
+        }).then(async (res) => {
+            if (res.status === 200) {
+                window.location.href = '/';
+            } else {
+                let error = document.getElementById("error");
+                let error_text = document.getElementById("error_text");
+                error.classList.remove('hidden');
+                let error_message = await res.json();
+
+                error_text.innerHTML = `${error_message.error}`;
+            }
+        })
+    }
+</script>

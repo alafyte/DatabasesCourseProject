@@ -1,0 +1,98 @@
+<h2 class="lg:text-4xl text-3xl font-extrabold dark:text-white text-center mb-8">Наши рестораны</h2>
+
+<div id="error"
+     class="hidden flex w-full md:max-w-md mx-auto  items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+     role="alert">
+    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+         fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+    </svg>
+    <span class="sr-only">Info</span>
+    <div id="error_text">
+
+    </div>
+</div>
+
+
+<% if (restaurants) { %>
+    <div class="md:max-w-xl lg:max-w-7xl md:mx-auto w-full px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <% restaurants.forEach((rest) => { %>
+            <div class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <%= rest.ADDRESS %>
+                </h5>
+                <p class="font-normal text-gray-700 dark:text-gray-400">
+                    Ежедневно
+                </p>
+                <p class="font-normal text-gray-700 dark:text-gray-400">
+                    Время работы: <%= rest.OPEN_TIME %> - <%= rest.CLOSE_TIME %>
+                </p>
+                <p class="font-normal text-gray-700 dark:text-gray-400">
+                    Доставка: <%= rest.DELIVERY_START_TIME %> - <%= rest.DELIVERY_END_TIME %>
+                </p>
+            </div>
+        <% }); %>
+    </div>
+<% } %>
+
+<a href="/map"
+   class="mx-auto text-white bg-blue-700 block w-fit hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg
+        text-sm px-5 py-2.5 mb-2 mt-8 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none
+        dark:focus:ring-blue-800">
+    Посмотреть карту доставки
+</a>
+<form id="nearest_form">
+    <button
+            class="mx-auto text-white bg-blue-700 block w-fit hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg
+        text-sm px-5 py-2.5 mb-2 mt-8 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none
+        dark:focus:ring-blue-800">
+        Найти ближайший ресторан
+    </button>
+</form>
+
+<div id="rest_result" class="hidden p-4 w-full md:max-w-md mx-auto mt-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+
+</div>
+
+<%- include('./partials/footer.ejs') %>
+
+<script type="text/javascript">
+    let form = document.getElementById('nearest_form');
+
+    form.onsubmit = (event) => {
+        event.preventDefault();
+        let jsonRequestData = {};
+
+        navigator.geolocation.getCurrentPosition((success) => {
+            console.log(success.coords.latitude, success.coords.longitude);
+            let { latitude, longitude } = success.coords;
+            jsonRequestData.latitude = Number(latitude);
+            jsonRequestData.longitude = Number(longitude);
+
+
+            fetch('/restaurants/find', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonRequestData)
+            }).then(async (res) => {
+                if (res.status === 200) {
+                    let elem = document.getElementById('rest_result');
+                    elem.classList.remove('hidden');
+
+                    let message = await res.json();
+                    elem.innerHTML = message.message;
+                } else {
+                    let error = document.getElementById("error");
+                    let error_text = document.getElementById("error_text");
+                    error.classList.remove('hidden');
+                    let error_message = await res.json();
+
+                    error_text.innerHTML = `${error_message.error}`;
+                }
+            })
+        })
+    }
+</script>
+

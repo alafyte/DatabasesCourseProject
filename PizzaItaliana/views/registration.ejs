@@ -1,0 +1,117 @@
+<div id="error"
+     class="hidden flex w-full md:max-w-md mx-auto  items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+     role="alert">
+    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+         fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+    </svg>
+    <span class="sr-only">Info</span>
+    <div id="error_text">
+
+    </div>
+</div>
+
+<section>
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+            <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    Создать аккаунт
+                </h1>
+                <form id="user_form" enctype="multipart/form-data" class="space-y-4 md:space-y-6">
+                    <div>
+                        <label for="full_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Имя
+                        </label>
+                        <input type="text" name="full_name" id="full_name" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Email
+                        </label>
+                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="">
+                    </div>
+                    <div>
+                        <label for="phone_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Номер телефона
+                        </label>
+                        <input type="tel" pattern="^\+375\(\d{2}\)\d{3}-\d{2}-\d{2}$" name="phone_number" id="phone_number" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+375(XX)XXX-XX-XX" required="">
+                    </div>
+                    <div class="relative z-0 w-full mb-6 group">
+                        <label for="date_of_birth" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Дата рождения
+                        </label>
+                        <div class="relative max-w-sm">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                                </svg>
+                            </div>
+                            <input required datepicker-format="dd-mm-yyyy" datepicker datepicker-autohide name="date_of_birth" type="text"
+                                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   placeholder="Дата рождения">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Пароль</label>
+                        <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                    <div>
+                        <label for="repeat_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Повторите пароль</label>
+                        <input type="password" name="repeat_password" id="repeat_password" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="">
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex items-center h-5">
+                            <input id="terms" aria-describedby="terms" type="checkbox" class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required="">
+                        </div>
+                        <div class="ml-3 text-sm">
+                            <label for="terms" class="font-light text-gray-500 dark:text-gray-300">Я принимаю <a class="font-medium text-primary-600 hover:underline dark:text-primary-500" href="#">Условия пользования</a></label>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Зарегистрироваться</button>
+                    <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                        Уже есть аккаунт? <a href="/users/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Войти</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    let form = document.getElementById('user_form');
+    form.onsubmit = async (event) => {
+        event.preventDefault();
+
+        const formData =  new FormData(form);
+        let jsonRequestData = {};
+
+        for (let [key, value] of formData) {
+            jsonRequestData[key] = value;
+        }
+
+        fetch('/auth/registration', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonRequestData)
+        }).then(async (res) => {
+            if (res.status === 200) {
+                window.location.href = '/users/login';
+            } else {
+                let error = document.getElementById("error");
+                let error_text = document.getElementById("error_text");
+                error.classList.remove('hidden');
+
+                let error_message = await res.json();
+
+                error_text.innerHTML = "";
+                for (let message of error_message.error) {
+                    error_text.innerHTML += `${message.msg}<br/>`;
+                }
+            }
+        })
+    };
+</script>

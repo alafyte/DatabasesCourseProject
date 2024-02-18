@@ -1,0 +1,127 @@
+<div id="error"
+     class="hidden flex w-full md:max-w-md mx-auto  items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+     role="alert">
+    <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+         fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+    </svg>
+    <span class="sr-only">Info</span>
+    <div id="error_text">
+
+    </div>
+</div>
+
+<div class="relative w-full max-w-md mx-auto max-h-full">
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <div class="px-6 py-6 lg:px-8">
+            <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Укажите ваш адрес</h3>
+            <form class="space-y-6 mt-4" id="order-form">
+                <div>
+                    <label for="street"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Улица (с указанием улица,
+                        проспект, переулок и т.д.)</label>
+                    <input type="text" name="street" id="street"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                           required>
+                </div>
+                <div>
+                    <label for="house_num"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Дом</label>
+                    <input type="text" name="house_num" id="house_num"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                           required>
+                </div>
+                <div>
+                    <label for="building"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Корпус</label>
+                    <input type="text" name="building" id="building"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                    >
+                </div>
+                <div>
+                    <label for="apartment"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Квартира</label>
+                    <input type="text" name="apartment" id="apartment"
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                           required>
+                </div>
+                <button type="submit"
+                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Оформить заказ
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let form = document.getElementById('order-form');
+
+    form.onsubmit = (event) => {
+        let error = document.getElementById("error");
+        let error_text = document.getElementById("error_text");
+        try {
+            event.preventDefault();
+            const formData = new FormData(form);
+            let jsonRequestData = {};
+
+            for (let [key, value] of formData) {
+                jsonRequestData[key] = value;
+            }
+
+            jsonRequestData.address = `${jsonRequestData.street}, ${jsonRequestData.house_num}`
+            if (jsonRequestData.building !== '') {
+                jsonRequestData.address += ` к${jsonRequestData.building}`;
+            }
+
+            let address = jsonRequestData.address;
+
+            if (!Number(jsonRequestData.apartment)){
+                error.classList.remove('hidden');
+                error_text.innerHTML = `Номер квартиры должен быть указан числом`;
+                return;
+            }
+            if (!Number(jsonRequestData.house_num)){
+                error.classList.remove('hidden');
+                error_text.innerHTML = `Номер дома должен быть указан числом`;
+                return;
+            }
+
+            jsonRequestData.address += `, кв. ${jsonRequestData.apartment}`;
+
+            fetch(`https://api.maptiler.com/geocoding/${address}%20Минск%20Беларусь%20220.json?key=V2FUSkUjii6I7PIo3elB`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.features[0].place_type[0] === 'region' || data.features[0].place_type[0] === 'postal_code')
+                        throw new Error("Invalid address")
+                    console.log(data.features[0].center)
+                    jsonRequestData.latitude = Number(data.features[0].center[1]);
+                    jsonRequestData.longitude = Number(data.features[0].center[0]);
+
+                    console.log(jsonRequestData.latitude, jsonRequestData.longitude)
+
+                    fetch(`/order/create`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(jsonRequestData)
+                    }).then(async (res) => {
+                        if (res.status === 200) {
+                            window.location.href = '/order';
+                        } else {
+                            error.classList.remove('hidden');
+                            let error_message = await res.json();
+                            error_text.innerHTML = `${error_message.error}`;
+                        }
+                    })
+            }).catch(() => {
+                error.classList.remove('hidden');
+                error_text.innerHTML = `Произошла ошибка! Проверьте введенные данные и повторите попытку`;
+            })
+        } catch (error) {
+            error.classList.remove('hidden');
+            error_text.innerHTML = `Произошла ошибка! Проверьте введенные данные и повторите попытку`;
+        }
+    }
+</script>

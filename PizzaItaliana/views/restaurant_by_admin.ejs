@@ -1,0 +1,50 @@
+<%- include('./partials/admin_welcome.ejs') %>
+
+<h2 class="text-4xl font-extrabold text-center mt-8 dark:text-white">
+    Информация о ресторане по адресу <%= restaurant.ADDRESS %>
+</h2>
+
+<p class="text-lg text-center mt-4 dark:text-white">
+    Ресторан работает с <%= restaurant.OPEN_TIME %> до <%= restaurant.CLOSE_TIME %>
+</p>
+
+<p class="text-lg text-center mt-2 dark:text-white">
+    Доставка работает с <%= restaurant.DELIVERY_START_TIME %> до <%= restaurant.DELIVERY_END_TIME %>
+</p>
+
+<h2 class="lg:text-4xl mt-8 text-3xl font-extrabold dark:text-white text-center mb-8">
+    Заказы ресторана
+</h2>
+
+<% if (orders.length !== 0) { %>
+    <% orders.forEach((order) => { %>
+        <div class="block mx-auto mb-3 max-w-xl p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <p class="font-bold text-xl dark:text-gray-400">
+                Дата заказа: <%= order.DATE_OF_ORDER %>, <%= order.PHONE_NUMBER %>
+            </p>
+            <p class="font-bold text-xl dark:text-gray-400">
+                На адрес: <%= order.ADDRESS %>
+            </p>
+            <% order.items.forEach(item => { %>
+                <div class="w-full max-w-sm bg-white rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex flex-col">
+                        <h5 class="text-xl italic tracking-tight text-gray-900 dark:text-white">
+                            - <%= item.product.ITEM_NAME %>
+                        </h5>
+                        <p class="text-md font-normal text-gray-700 dark:text-white">
+                            <%= item.ITEM_SIZE %> см, количество: <%= item.ITEM_QUANTITY %>
+                        </p>
+                    </div>
+                </div>
+            <% }); %>
+            <p class="font-normal text-xl dark:text-gray-400">
+                Итоговая цена: <%= order.result_price %> р.
+            </p>
+        </div>
+    <% }) %>
+
+<% } else { %>
+    <h2 class="lg:text-4xl text-3xl font-extrabold dark:text-white text-center mb-8">
+        Eщё нет заказов
+    </h2>
+<% } %>

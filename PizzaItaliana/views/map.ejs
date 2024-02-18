@@ -1,0 +1,56 @@
+<div id="map">
+    <a href="https://www.maptiler.com" style="position:absolute;left:10px;bottom:10px;z-index:999;"><img
+                src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo"></a>
+</div>
+<script>
+    const key = 'V2FUSkUjii6I7PIo3elB';
+    const attribution = new ol.control.Attribution({
+        collapsible: false,
+    });
+
+    const source = new ol.source.TileJSON({
+        url: `https://api.maptiler.com/maps/streets-v2/tiles.json?key=${key}`, // source URL
+        tileSize: 512,
+        crossOrigin: 'anonymous'
+    });
+
+    const map = new ol.Map({
+        layers: [
+            new ol.layer.Tile({
+                source: source
+            })
+        ],
+        controls: ol.control.defaults.defaults({attribution: false}).extend([attribution]),
+        target: 'map',
+        view: new ol.View({
+            constrainResolution: true,
+            center: ol.proj.fromLonLat([27.555696, 53.902735,]), // starting position [lng, lat]
+            zoom: 12, // starting zoom,
+        }),
+
+    });
+
+    const layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            url: "http://localhost:3000/api/data",
+            format: new ol.format.GeoJSON(),
+        }),
+        style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: 'rgba(0, 136, 136, 0.8)',
+            }),
+            fill: new ol.style.Fill({
+                color: 'rgba(0, 136, 136, 0.2)',
+            }),
+            image: new ol.style.Circle({
+                radius: 6,
+                fill: new ol.style.Fill({color: 'blue'}),
+                stroke: new ol.style.Stroke({
+                    color: [0, 0, 255], width: 2
+                })
+            })
+        })
+    });
+
+    map.addLayer(layer);
+</script>

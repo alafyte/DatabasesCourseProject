@@ -1,0 +1,41 @@
+<%- include('./partials/admin_welcome.ejs') %>
+
+<div class="w-full md:max-w-6xl mx-auto mt-8">
+    <a href="/restaurants/add" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm
+px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+        Добавить ресторан
+    </a>
+    <a href="/map" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border
+border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200
+dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white
+dark:hover:bg-gray-700">
+        Посмотреть карту доставки
+    </a>
+</div>
+
+<% if (restaurants) { %>
+    <div class="md:max-w-xl mt-8 lg:max-w-7xl md:mx-auto w-full px-4 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <% restaurants.forEach((rest) => { %>
+            <a href="/restaurants/<%= rest.ID %>"
+               class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <%= rest.ADDRESS %>
+                </h5>
+                <h6 class="font-bold text-gray-700 dark:text-gray-400">
+                    Администратор: <%= rest.ADMIN %>
+                </h6>
+                <p class="font-normal text-gray-700 dark:text-gray-400">
+                    Ежедневно
+                </p>
+                <p class="font-normal text-gray-700 dark:text-gray-400">
+                    Время работы: <%= rest.OPEN_TIME %> - <%= rest.CLOSE_TIME %>
+                </p>
+                <p class="font-normal text-gray-700 dark:text-gray-400">
+                    Доставка: <%= rest.DELIVERY_START_TIME %> - <%= rest.DELIVERY_END_TIME %>
+                </p>
+            </a>
+        <% }); %>
+    </div>
+<%- include('./partials/footer.ejs')%>
+<% } %>
+

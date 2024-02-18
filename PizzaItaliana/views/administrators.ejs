@@ -1,0 +1,68 @@
+<%- include('./partials/admin_welcome.ejs') %>
+
+<div class="w-full md:max-w-6xl mx-auto mt-8">
+    <a href="/admin/new" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm
+px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+        Добавить администратора
+    </a>
+</div>
+
+<% if (admins) { %>
+    <div class="relative overflow-x-auto mt-8">
+        <table class="w-full md:max-w-6xl mx-auto text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    ID
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    ФИО
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Email
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Телефон
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Дата рождения
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Ресторан
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <% admins.forEach((admin) => { %>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <%= admin.ID %>
+                    </th>
+                    <td class="px-6 py-4">
+                        <%= admin.FULL_NAME %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= admin.EMAIL %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= admin.PHONE_NUMBER %>
+                    </td>
+                    <td class="px-6 py-4">
+                        <%= admin.DATE_OF_BIRTH %>
+                    </td>
+                    <td class="px-6 py-4">
+
+                        <% if (admin.ADDRESS === null) { %>
+                            -
+                        <% } else { %>
+                            <%= admin.ADDRESS %>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <%- include('./partials/footer.ejs')%>
+<% } %>

@@ -1,0 +1,46 @@
+<% if (orders.length !== 0){ %>
+    <h2 class="lg:text-4xl text-3xl font-extrabold dark:text-white text-center mb-8">
+        Ваши заказы
+    </h2>
+    <% orders.forEach((order) => { %>
+        <div class="block mx-auto mb-3  max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow  dark:bg-gray-800 dark:border-gray-700">
+            <p class="font-normal text-xl dark:text-gray-400">
+                Дата заказа: <%= order.DATE_OF_ORDER%>
+            </p>
+            <p class="font-normal text-lg dark:text-gray-400">
+                На адрес: <%= order.ADDRESS%>
+            </p>
+            <% order.items.forEach(item => { %>
+                <div class="w-full mx-auto max-w-sm bg-white mb-4 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                    <div class="flex flex-col items-center mx-auto md:flex-row md:max-w-md">
+                        <img class="object-cover h-40 md:h-auto md:w-44 md:rounded-none md:rounded-l-lg"
+                             src="<%= item.product.ITEM_IMAGE %>" alt="<%= item.product.ITEM_NAME %>">
+                        <div class="flex flex-col p-4 leading-normal">
+                            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                <%= item.product.ITEM_NAME %>
+                            </h5>
+                            <p class="mb-3 text-md font-normal text-gray-700 dark:text-white">
+                                <%= item.ITEM_SIZE %> см
+                            </p>
+                            <p class="mb-3 text-md font-normal text-gray-700 dark:text-white">
+                                Количество: <%= item.ITEM_QUANTITY %>
+                            </p>
+                            <p id="price<%= item.ID %>"
+                               class="price-area mb-3 mt-3 text-md font-normal dark:text-white">
+                                Цена: <%= item.CURRENT_PRICE %> р.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+            <p class="font-normal text-xl dark:text-gray-400">
+                Итого: <%= order.result_price%> р.
+            </p>
+        </div>
+    <% }); %>
+
+<% } else { %>
+    <h2 class="lg:text-4xl text-3xl font-extrabold dark:text-white text-center mb-8">
+        У вас ещё нет заказов
+    </h2>
+<% } %>
